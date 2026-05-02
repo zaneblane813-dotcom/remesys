@@ -14,6 +14,11 @@ class NotificationWorker {
             $result = $mailer->send([
                 'sender_email' => (string)($payload['sender_email'] ?? $smtp['from'][0]),
                 'recipient_email' => (string)($payload['recipient_email'] ?? ''),
+                'subject' => (string)($job['subject'] ?? 'Notification'),
+                'html' => (string)($job['message'] ?? ''),
+                'attachment_path' => (string)($job['attachment_path'] ?? ''),
+                'template' => $payload['template'] ?? null,
+                'template_vars' => $payload['template_vars'] ?? [],
             ]);
 
             $status = $result['ok'] ? 'sent' : 'failed';

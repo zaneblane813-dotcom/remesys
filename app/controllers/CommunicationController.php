@@ -33,6 +33,8 @@ class CommunicationController extends Controller {
             'payload' => json_encode([
                 'sender_email' => (string)$payload['sender_email'],
                 'recipient_email' => (string)$payload['recipient_email'],
+                'template' => $payload['template'] ?? null,
+                'template_vars' => $payload['template_vars'] ?? [],
             ], JSON_UNESCAPED_SLASHES),
             'max_retry' => 5,
             'next_attempt_at' => date('Y-m-d H:i:s'),
