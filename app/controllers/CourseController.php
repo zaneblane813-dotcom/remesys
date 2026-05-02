@@ -1,16 +1,15 @@
 <?php
-require_once __DIR__ . '/../../core/Controller.php';
-require_once __DIR__ . '/../models/Course.php';
-
 class CourseController extends Controller {
-    public function catalog(): void {
+    public function catalog(Request $request): void {
         $model = new Course();
         $this->json(['data' => $model->listCatalog()]);
     }
 
-    public function sync(string $tenantId = '1'): void {
+    public function syncFromBody(Request $request): void {
+        $payload = $request->json();
+        $tenantId = isset($payload['tenant_id']) ? (int)$payload['tenant_id'] : 1;
         $model = new Course();
-        $affected = $model->syncCatalogToTenant((int)$tenantId);
-        $this->json(['synced_rows' => $affected]);
+        $affected = $model->syncCatalogToTenant($tenantId);
+        $this->json(['tenant_id' => $tenantId, 'synced_rows' => $affected]);
     }
 }

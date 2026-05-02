@@ -1,4 +1,4 @@
 <?php
-require_once __DIR__ . '/../core/Database.php';
-require_once __DIR__ . '/../core/App.php';
+require_once __DIR__ . '/../core/Autoloader.php';
+Autoloader::register();
 (new App())->run();
