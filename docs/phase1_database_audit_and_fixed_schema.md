@@ -92,3 +92,9 @@ See migration SQL:
 - Added MVC `Course` model + `CourseController` endpoints:
   - `/course/catalog`
   - `/course/sync/{tenantId}`
+
+
+## PHASE 4 KICKOFF (Implemented)
+- Added academic transactional tables: enrollments, attendance, exams, exam_results.
+- Added Student module endpoint: `POST /student/create`.
+- Added smoke script: `scripts_smoke_test.sh`.
