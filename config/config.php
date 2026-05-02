@@ -2,7 +2,8 @@
 return [
     'app' => [
         'name' => 'Remesys ERP LMS SaaS',
-        'base_url' => '/'
+        'base_url' => '/',
+        'api_key' => getenv('REMESYS_API_KEY') ?: 'dev-change-me'
     ],
     'db' => [
         'host' => '127.0.0.1',

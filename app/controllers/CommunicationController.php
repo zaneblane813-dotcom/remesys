@@ -5,6 +5,7 @@ class CommunicationController extends Controller {
     }
 
     public function queueEmail(Request $request): void {
+        if ($err = Auth::requireApiKey($request)) { $this->json($err, 401); return; }
         $payload = $request->json();
         foreach (['tenant_id','module','recipient_email','sender_email'] as $required) {
             if (empty($payload[$required])) {
@@ -40,10 +41,23 @@ class CommunicationController extends Controller {
             'next_attempt_at' => date('Y-m-d H:i:s'),
         ]);
 
+        (new AuditLog())->add([
+            'tenant_id' => (int)$payload['tenant_id'],
+            'actor_user_id' => $payload['user_id'] ?? null,
+            'module' => 'communication',
+            'action' => 'queue_email',
+            'entity_type' => 'communication',
+            'entity_id' => (string)$commId,
+            'ip_address' => $_SERVER['REMOTE_ADDR'] ?? null,
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+            'meta' => json_encode(['queue_id' => $jobId], JSON_UNESCAPED_SLASHES),
+        ]);
+
         $this->json(['communication_id' => $commId, 'queue_id' => $jobId], 201);
     }
 
     public function processQueue(Request $request): void {
+        if ($err = Auth::requireApiKey($request)) { $this->json($err, 401); return; }
         $result = (new NotificationWorker())->run();
         $this->json($result);
     }
